@@ -1,0 +1,835 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background-color: #000000;          
+  color: #ffffff;
+  font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+img { display: block; max-width: 100%; }
+a   { text-decoration: none; color: inherit; }
+ul  { list-style: none; }
+h1, h2, h3, h4 { font-family: 'Philosopher', serif; font-weight: normal; }
+
+.header {
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 1000;
+  padding: 20px;
+  width: 100%;
+  display: flex;                     
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.logoHolder {
+    text-align: left;
+}
+
+.logoHolder a {
+    display: inline-block;
+    width: 300px;
+}
+
+.logoHolder a img {
+    width: 100%;
+}
+.menuHolder {
+  position: absolute;
+  right: 20px; top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.langSelect {
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-family: 'Philosopher', serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.btnOpenMenu {
+  width: 40px; height: 40px;
+  background: rgba(0,0,0,0.55);
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.btnOpenMenu span {
+  display: block;
+  width: 20px; height: 2px;
+  background: #ffffff;
+  transition: all ease-out 400ms;
+}
+.btnOpenMenu:hover span { background: #a8631c; }
+
+.overlay {
+  position: fixed;
+  width: 100%; height: 100%;
+  top: 0; left: 0;
+  background: rgba(0,0,0,0.8);       
+  z-index: 3000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all ease-out 400ms;
+  overflow-y: auto;
+  padding: 60px 20px;
+}
+.overlay.open { opacity: 1; visibility: visible; }
+
+.overlay-close {
+  display: block;
+  margin: 0 auto 30px;
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  font-family: 'Philosopher', serif;
+  font-size: 16px;
+  letter-spacing: 4px;
+  cursor: pointer;
+  padding: 8px 20px;
+}
+.overlay-close:hover { color: #a8631c; }
+
+.branchesList { max-width: 420px; margin: 0 auto; }
+.branchesList li { margin-top: 1px; }
+.branchesList li a {
+  background-color: rgba(32,33,45,0.8);
+  display: block;
+  padding: 12px 30px 12px 20px;
+  color: #a0a5a8;
+  font-family: 'Philosopher', serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  transition: all ease-out 400ms;
+}
+.branchesList li a:hover { color: #a8631c; padding-left: 30px; }
+
+.mainBanner {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+.mainBanner .slide {
+  position: absolute;
+  inset: 0;                          
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity ease-out 1200ms;
+}
+.mainBanner .slide.active { opacity: 1; }
+
+.scrollDown {
+  position: absolute;
+  left: 50%;
+  bottom: 55px;
+  margin-left: -80px;
+  width: 160px;
+  text-align: center;
+  color: #ffffff;
+  font-family: 'Philosopher', serif;
+  font-size: 15px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  z-index: 500;
+}
+
+#arrow {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  margin-left: -25px;
+  width: 50px;
+  text-align: center;
+  z-index: 500;
+  cursor: pointer;
+}
+#arrow i {
+  color: #fff;
+  font-size: 28px;
+  font-style: normal;
+  display: block;
+  animation: fadeMoveDown 2s ease-in-out infinite;
+}
+@keyframes fadeMoveDown {
+  0%   { opacity: 0; transform: translateY(-8px); }
+  50%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(8px); }
+}
+
+.hpElements { width: 100%; }
+
+.hpBigImg {
+  position: relative;
+  overflow: hidden;
+  height: 340px;
+}
+.hpBigImg.threeImgs { height: 470px; }
+.hpBigImg.fullTall  { height: 420px; }
+
+.blockBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all ease-out 800ms;
+}
+.hpImg:hover .blockBg {
+  transform: scale3d(1.1, 1.1, 1);
+  opacity: 0.5;                      /* original dims image on hover */
+}
+
+/* content layer: title + text, centered */
+.blockContent {
+  position: relative;
+  z-index: 100;
+  height: 100%;
+  display: flex;                     /* FLEXBOX: centers title + text */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 30px;
+}
+
+/* Block title — white, Philosopher, spaced, gradient lines above+below
+   (exact technique from the original .hpBlockTitle span:before/:after) */
+.hpBlockTitle {
+  position: relative;
+  text-align: center;
+  font-size: 25px;
+  color: #ffffff;
+}
+.hpBlockTitle span {
+  position: relative;
+  display: inline-block;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  font-family: 'Philosopher', serif;
+  letter-spacing: 5px;
+}
+.hpBlockTitle span::before,
+.hpBlockTitle span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right,
+    rgba(255,255,255,0) 0%, rgba(255,255,255,1) 25%,
+    rgba(255,255,255,1) 49%, rgba(255,255,255,1) 71%,
+    rgba(255,255,255,0) 100%);
+}
+.hpBlockTitle span::after  { top: -2px; }
+.hpBlockTitle span::before { bottom: 2px; }
+
+.hpBlockTitle small {
+  display: block;
+  font-family: 'Philosopher', serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: none;
+  margin-top: 6px;
+}
+
+/* Story paragraph on the image */
+.home-our-story {
+  text-align: center;
+  padding: 16px;
+  max-width: 1200px;
+width: 90%;
+margin-left: auto;
+margin-right: auto;
+  font-family: 'Philosopher', serif;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+/* Invisible full-size link over each block (like original .imgLink) */
+.imgLink {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  z-index: 200;
+  font-size: 0;                      /* invisible but clickable */
+}
+
+/* Row layout — FLEXBOX replaces the original floats.
+   .smallBlocksHolder = row of 3-column cards, .rowTwo = row of 2 halves */
+.smallBlocksHolder { display: flex; flex-wrap: wrap; }
+.hpBigImg.threeImgs { width: 33.333%; }
+.rowTwo { display: flex; flex-wrap: wrap; }
+.rowTwo .hpBigImg  { width: 50%; }
+
+/* ---------- 6. INNER PAGES (Story / Cuisine / Contact) ---------- */
+/* Banner at the top of every inner page */
+.pageBanner {
+  position: relative;
+  height: 60vh;
+  min-height: 380px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pageBanner .blockBg { position: absolute; }
+
+.sectionBackground {
+  background-color: #000000;         /* exact original rule */
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.contentWrap { max-width: 1000px; margin: 0 auto; text-align: center; }
+.contentWrap h2 { font-size: 24px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 20px; }
+.contentWrap p  { color: #a4a4a4; font-family: 'Philosopher', serif; font-size: 16px; line-height: 26px; letter-spacing: 1px; margin-bottom: 16px; }
+
+/* About page: alternating text/image rows */
+.aboutRow {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto 70px;
+  text-align: left;
+}
+.aboutRow.reverse { flex-direction: row-reverse; }   /* flips the columns */
+.aboutRow .aboutImg { flex: 1; }
+.aboutRow .aboutTxt { flex: 1; }
+.aboutRow .aboutImg img { width: 100%; }
+.aboutRow h3 { color: #fff; font-size: 20px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; }
+.aboutRow p  { color: #a4a4a4; font-family: 'Philosopher', serif; line-height: 24px; letter-spacing: 1px; }
+
+.blockContent--babel .hpBlockTitle,
+.blockContent--cuisine .hpBlockTitle {
+    text-align: left;
+    width: 100%;
+}
+
+.blockContent--babel .hpBlockTitle span,
+.blockContent--cuisine .hpBlockTitle span {
+    padding-left: 0;
+}
+
+
+/* Cuisine page: dish cards */
+.dishGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.dishCard {
+  position: relative;
+  width: 33.333%;
+  height: 300px;
+  overflow: hidden;
+}
+.dishCard img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: all ease-out 800ms;
+}
+.dishCard:hover img { transform: scale3d(1.1, 1.1, 1); opacity: 0.6; }
+.dishCard figcaption {
+  position: absolute;
+  left: 0; bottom: 18px;
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+  font-family: 'Philosopher', serif;
+  font-size: 17px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+.dishCategory {
+  font-size: 22px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin: 60px 0 25px;
+}
+
+/* Contact page: branch info cards */
+.contactGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  max-width: 1100px;
+  margin: 0 auto 60px;
+}
+.contactCard {
+  width: 33.333%;
+  background-color: rgba(32,33,45,0.8);
+  padding: 25px 20px;
+  text-align: center;
+}
+.contactCard h3 { font-size: 17px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+.contactCard p  { color: #a0a5a8; font-family: 'Philosopher', serif; font-size: 14px; line-height: 22px; letter-spacing: 1px; }
+
+/* Contact form */
+.contactForm {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: left;
+}
+.contactForm input,
+.contactForm textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: rgba(32,33,45,0.8);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-family: 'Philosopher', serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+.contactForm input:focus,
+.contactForm textarea:focus { outline: none; border-color: #a8631c; }
+.contactForm textarea { height: 130px; resize: vertical; }
+.contactForm button {
+  display: block;
+  margin: 10px auto 0;
+  background: transparent;
+  border: 1px solid #a8631c;
+  color: #a8631c;
+  font-family: 'Philosopher', serif;
+  font-size: 15px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  padding: 12px 40px;
+  cursor: pointer;
+  transition: all ease-out 400ms;
+}
+.contactForm button:hover { background: #a8631c; color: #000; }
+
+/* ---------- 7. FOOTER ---------- */
+.siteFooter {
+  background: #000;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  padding: 30px 20px;
+}
+.smLinks {
+  display: flex;                     /* FLEXBOX: social links in a row */
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 15px;
+}
+.smLinks a {
+  color: #a0a5a8;
+  font-family: 'Philosopher', serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+.smLinks a:hover { color: #a8631c; }
+.siteFooter p { color: #a4a4a4; font-size: 12px; letter-spacing: 1px; }
+
+/* ---------- 8. RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .hpBigImg.threeImgs { width: 50%; }
+  .dishCard, .contactCard { width: 50%; }
+  .aboutRow, .aboutRow.reverse { flex-direction: column; text-align: center; }
+}
+@media (max-width: 600px) {
+  .hpBigImg.threeImgs, .rowTwo .hpBigImg,
+  .dishCard, .contactCard { width: 100%; }
+  .hpBigImg { height: 300px; }
+  .hpBigImg.threeImgs { height: 340px; }
+  .logoHolder a { width: 110px; }
+  .home-our-story { font-size: 14px; line-height: 19px; }
+  .hpBlockTitle { font-size: 20px; }
+}
+
+/* Babel Story Banner */
+.pageBanner {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.pageBanner .blockBg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Story Text Over the Picture */
+.blockContent {
+    position: absolute;
+    z-index: 2;
+    color: #fff;
+}
+
+.blockContent--babel {
+    left: 0%;
+    top: 5%;
+    width: 25%;
+    max-width: 360px;
+}
+
+.blockContent--cuisine {
+    right: 0%;
+    left: auto;
+    top: 5%;
+    width: 27%;
+    max-width: 390px;
+}
+
+/* Story Headings */
+.hpBlockTitle {
+    display: block;
+    font-size: 40px;
+    font-weight: normal;
+    letter-spacing: 4px;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    font-family: 'Philosopher', serif;
+    font-weight: bold;
+}
+
+.blockContent--babel .hpBlockTitle,
+.blockContent--cuisine .hpBlockTitle {
+    color: #E38214;
+}
+
+
+
+/* Cuisine Link */
+.blockContent .textLink {
+    color:#ffffff;
+    text-decoration: underline;
+}
+
+/* Mobile Layout */
+@media (max-width: 900px) {
+    .pageBanner {
+        height: auto;
+        min-height: 100vh;
+        padding: 40px 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .pageBanner .blockBg {
+        position: absolute;
+    }
+
+    .blockContent--babel,
+    .blockContent--cuisine {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .hpBlockTitle {
+        font-size: 26px;
+    }
+}
+
+
+
+.hpBigImg .blockContent {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    max-width: none;
+    padding: 0 40px;
+    text-align: center;
+    z-index: 2;
+    color: #fff;
+}
+/* Homepage location titles */
+.hpBigImg .hpBlockTitle,
+.hpBigImg .hpBlockTitle span {
+    font-weight: normal !important;
+    font-size: 20px !important;
+}
+
+
+.branchText {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 400px;
+    max-width: 90%;
+    background: #000;
+    color: rgb(161, 157, 157);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px 40px;
+    box-sizing: border-box;
+    z-index: 2;
+
+    /* Blend the right edge into the picture */
+    border-right: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- CONTACT US PAGE ---------- */
+
+.contactUsPage {
+    background: #000;
+    color: #fff;
+}
+
+.contactUsPage .header {
+    position: relative;
+    top: auto;
+    left: auto;
+    min-height: 85px;
+}
+
+.contactUsMain {
+    width: 94%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 20px 0 70px;
+    text-align: center;
+}
+
+.contactUsMain > h1 {
+    color: #fff;
+    font-size: clamp(42px, 6vw, 70px);
+    margin: 10px 0 25px;
+    font-weight: normal;
+}
+
+
+
+.headquarters {
+    max-width: 500px;
+    margin: 45px auto 65px;
+    text-align: center;
+}
+
+.headquarters h2,
+.contactBranch h2 {
+    color: #E38214;
+    font-family: 'Philosopher', serif;
+    font-size: 27px;
+    font-weight: normal;
+    margin: 0 0 10px;
+}
+
+.headquarters h3 {
+    color: #fff;
+    font-family: 'Philosopher', serif;
+    font-size: 21px;
+    font-weight: normal;
+    margin: 0 0 20px;
+}
+
+.contactDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.contactDetails p {
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+.contactDetails a {
+    color: #20C9C3;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.contactDetails a:hover {
+    color: #fff;
+}
+
+.branchGrid {
+    display: grid;
+    gap: 55px 25px;
+    width: 100%;
+    margin: 0 auto 65px;
+}
+
+.branchGridFour {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.branchGridThree {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 1100px;
+}
+
+.contactBranch {
+    min-width: 0;
+    text-align: center;
+}
+
+.contactBranch h2 {
+    margin-bottom: 20px;
+}
+
+.contactClosing {
+    color: #fff;
+    font-family: 'Philosopher', serif;
+    font-size: 20px;
+    line-height: 1.7;
+    text-align: center;
+    margin: 25px auto;
+}
+
+.contactBottomLine {
+    margin-top: 35px;
+}
+
+.contactUsPage .siteFooter {
+    margin-top: 0;
+}
+
+@media (max-width: 1000px) {
+    .branchGridFour {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .branchGridThree {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .contactUsMain {
+        width: 90%;
+        padding-top: 10px;
+    }
+
+    .headquarters {
+        margin: 35px auto 50px;
+    }
+
+    .branchGridFour,
+    .branchGridThree {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-bottom: 45px;
+    }
+
+    .contactBranch h2,
+    .headquarters h2 {
+        font-size: 25px;
+    }
+
+    .contactClosing {
+        font-size: 17px;
+    }
+}
+
+
+/* ---------- CUSTOMER CONTACT FORM ---------- */
+
+.customerContactForm {
+  width: 95%;
+  max-width: 900px;
+  margin: 25px auto 40px;
+  background: #000;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.customerContactForm .formGroup {
+  margin: 0;
+  padding: 7px 12px;
+  background: #000;
+  border: 1px solid #fff;
+}
+
+.customerContactForm label {
+  display: block;
+  color: #fff;
+  margin-bottom: 2px;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.customerContactForm input,
+.customerContactForm textarea {
+  display: block;
+  width: 100%;
+  padding: 2px 0;
+  background: transparent;
+  color: #fff;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.customerContactForm input::placeholder,
+.customerContactForm textarea::placeholder {
+  color: #aaa;
+}
+
+.customerContactForm textarea {
+  height: 55px;
+  resize: vertical;
+}
+
+.customerContactForm .contactSubmit {
+  align-self: center;
+  margin: 5px auto 0;
+  padding: 7px 24px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.customerContactForm .contactSubmit:hover {
+  background: #fff;
+  color: #000;
+}
